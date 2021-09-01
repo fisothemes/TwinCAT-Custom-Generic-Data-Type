@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.4">
+  <POU Name="P_Example_1" Id="{8f5a3a44-9bf4-4874-a6db-394e8666faeb}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM P_Example_1
+VAR
+	stArg 	: ARRAY[0..5] OF ST_Arg;
+	
+	Numeric_Type 		: INT := 20;
+	User_Defined_Type	: TON := (PT := T#10S);
+	
+	rtnInteger 	: INT;
+	rtnPointer 	: POINTER TO TON;
+	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// Store 
+stArg[0] := F_ANY_ARG(Numeric_Type);
+stArg[1] := F_INT_ARG(1);
+stArg[2] := F_REAL_ARG(12.442);
+stArg[3] := F_STRING_ARG('Cats');
+stArg[4] := F_PVOID_ARG(ADR(User_Defined_Type));
+
+rtnInteger := F_INT_RTN(stArg[0]);
+rtnPointer := F_PVOID_RTN(stArg[4]);]]></ST>
+    </Implementation>
+    <LineIds Name="P_Example_1">
+      <LineId Id="20" Count="0" />
+      <LineId Id="13" Count="4" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

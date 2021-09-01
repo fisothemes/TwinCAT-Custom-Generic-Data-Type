@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.4">
+  <POU Name="P_Example_2" Id="{14fb9333-9aaf-4080-9c4c-8307d8dc0b49}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM P_Example_2
+VAR
+	bIs_Empty, bInsert, bAdd, bfAccess, bnAccess, bsAccess, bResize, bClear : BOOL;
+	fbDyn_Array : FB_Dynamic_Array(10);
+	aArray 		: ARRAY[0..30] OF T_DynamicArrayDataType;
+	nDyn_Size 	: DINT;
+	
+	fAccess 	: REAL; 
+	nAccess 	: DINT; 
+	sAccess 	: STRING; 
+ 
+	i 			: DINT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[bIs_Empty := fbDyn_Array.Is_Empty();
+nDyn_Size := fbDyn_Array.Size();
+fbDyn_Array.Show(aArray);
+
+IF bInsert THEN
+	fbDyn_Array.Insert(F_STRING_ARG('FIRST'),0); 
+	FOR i := 1 TO 9 DO fbDyn_Array.Insert(F_DINT_ARG(i*11),i); END_FOR
+	bInsert := 0;
+	END_IF
+
+IF bAdd 	THEN fbDyn_Array.Insert(F_REAL_ARG(33.33),10); 	bAdd 	:= 0; END_IF
+IF bfAccess THEN fAccess := F_REAL_RTN(fbDyn_Array.Access(10)); bfAccess := 0; END_IF
+IF bnAccess THEN nAccess := F_DINT_RTN(fbDyn_Array.Access(2)); bnAccess := 0; END_IF
+IF bsAccess THEN sAccess := F_STRING_RTN(fbDyn_Array.Access(0)); bsAccess := 0; END_IF
+IF bResize 	THEN fbDyn_Array.Resize(5); bResize := 0; END_IF
+IF bClear 	THEN fbDyn_Array.Clear(); bClear := 0; END_IF]]></ST>
+    </Implementation>
+    <LineIds Name="P_Example_2">
+      <LineId Id="21" Count="8" />
+      <LineId Id="43" Count="0" />
+      <LineId Id="30" Count="1" />
+      <LineId Id="41" Count="1" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

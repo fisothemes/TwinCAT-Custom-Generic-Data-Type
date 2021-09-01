@@ -1,0 +1,235 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.4">
+  <POU Name="FB_Dynamic_Array" Id="{151061a5-d3f1-4a43-b5f6-44944bb573cf}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Dynamic_Array
+VAR_INPUT
+	
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	pData 	: POINTER TO T_DynamicArrayDataType;
+	nLength : DINT;
+	t_Null	: T_DynamicArrayDataType := (TypeClass := __SYSTEM.TYPE_CLASS.TYPE_NONE, pValue := 0 , diSize := -1, sValue := 'NULL');
+END_VAR
+
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="Access" Id="{ac0a5f7b-a0d4-4e49-beda-3826bbf28838}">
+      <Declaration><![CDATA[(* Get element in array from specified poisiton. *)
+METHOD Access : T_DynamicArrayDataType
+VAR_INPUT
+	nPosition : DINT;  // Position of element in dynamic array, 0 indexed.
+END_VAR
+
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF nPosition < 0 THEN Access := t_Null; RETURN; END_IF
+IF THIS^.Is_Empty() THEN FB_Init(FALSE,FALSE,(nPosition+1)*2); END_IF
+IF nPosition >= THIS^.Size() THEN THIS^.Insert(t_Null, nPosition); END_IF
+Access := THIS^.pData[nPosition];
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Clear" Id="{61bd7724-e2ea-4bde-b7bd-c41ffb9830f3}">
+      <Declaration><![CDATA[(* Deletes array from memory. *)
+METHOD Clear
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT(THIS^.Is_Empty()) THEN __DELETE(THIS^.pData); THIS^.Is_Empty(); END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="FB_exit" Id="{ad91c2f7-b680-45b1-adaf-4c5eb0ca9009}">
+      <Declaration><![CDATA[METHOD FB_exit : BOOL
+VAR_INPUT
+	bInCopyCode : BOOL; // if TRUE, the exit method is called for exiting an instance that is copied afterwards (online change).
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.Clear();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="FB_init" Id="{ad036e8c-92b0-4824-b55b-41c5ac9fd5d2}">
+      <Declaration><![CDATA[METHOD FB_init : BOOL
+VAR_INPUT
+	bInitRetains 	: BOOL; 	// if TRUE, the retain variables are initialized (warm start / cold start)
+	bInCopyCode 	: BOOL;  	// if TRUE, the instance afterwards gets moved into the copy code (online change)
+	nLength 		: DINT; 	// Length to initialize array with, default is 10;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.Clear();
+IF nLength > 0 THEN 
+	THIS^.pData := __NEW(BYTE, TO_UDINT(SIZEOF(T_DynamicArrayDataType)*nLength)); 
+	END_IF
+THIS^.nLength := nLength;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Insert" Id="{50f9e499-240c-4146-8b68-b69faf5e63a6}">
+      <Declaration><![CDATA[(* Insert element into array at specified position. *)
+METHOD Insert
+VAR_INPUT
+	Data 		: T_DynamicArrayDataType; 	// Data to insert in dynamic array.
+	nPosition 	: DINT; 					// Position to insert data at in the dynamic array, 0 indexed. 
+END_VAR
+VAR
+	pTemp_Data 		: POINTER TO T_DynamicArrayDataType;
+	nTemp_Length 	: DINT;
+	i : DINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF nPosition < 0 THEN RETURN; END_IF
+IF THIS^.Is_Empty() THEN FB_Init(FALSE,FALSE,(nPosition+1)*2); END_IF
+IF nPosition < THIS^.Size() THEN 
+	THIS^.pData[nPosition] := Data;
+ELSE 
+	THIS^.Resize((nPosition+1)*2);
+	THIS^.pData[nPosition] := Data;
+	END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Is_Empty" Id="{1a6f3f50-0bf0-48ce-b0c8-ea0b99aa03ef}">
+      <Declaration><![CDATA[(* Checks if array is empty. *)
+METHOD Is_Empty : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[Is_Empty := THIS^.pData = 0;
+IF Is_Empty THEN THIS^.nLength := 0; END_IF ]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Resize" Id="{4bcd3e47-7346-4b8d-8a63-f815ad048ac5}">
+      <Declaration><![CDATA[(* Manually resize dynamic array length. If Array become smaller, elements higher positions will be deleted. *)
+METHOD Resize
+VAR_INPUT
+	nLength : DINT; // New length of dynamic array.
+END_VAR
+VAR
+	pTemp_Data 		: POINTER TO T_DynamicArrayDataType;
+	nTemp_Length 	: DINT;
+	i : DINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF nLength <= 0 THEN THIS^.Clear(); RETURN; END_IF
+IF THIS^.Is_Empty() THEN FB_init(FALSE,FALSE,nLength); RETURN; END_IF
+IF THIS^.nLength = nLength THEN RETURN; END_IF
+
+pTemp_Data 		:= THIS^.pData; 
+
+nTemp_Length 	:= THIS^.nLength;
+THIS^.nLength 	:= nLength;
+
+THIS^.pData := __NEW(BYTE, TO_UDINT(SIZEOF(T_DynamicArrayDataType)*THIS^.nLength));
+FOR i := 0 TO TO_DINT(nTemp_Length-1) DO 
+	IF i > TO_DINT(THIS^.nLength-1) THEN EXIT; END_IF 
+	THIS^.pData[i] := pTemp_Data[i]; 
+	END_FOR
+__DELETE(pTemp_Data);
+  
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Show" Id="{56bd239f-a051-4f7c-9145-a32b851b5534}">
+      <Declaration><![CDATA[(* Display elements in dynamic array in a static array. *)
+METHOD Show
+VAR_IN_OUT
+	aList : ARRAY[*] OF T_DynamicArrayDataType; // Static array to display data in dynamic array.
+END_VAR
+VAR
+	i,j : DINT; 
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[FOR i := LOWER_BOUND(aList, 1) TO UPPER_BOUND(aList, 1) DO
+	IF (j < TO_DINT(THIS^.Size())) AND NOT(THIS^.Is_Empty()) THEN
+		aList[i] := THIS^.pData[j];
+		j := j + 1; 
+	ELSE 
+		aList[i] := t_Null;
+	 	END_IF
+	END_FOR ]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Size" Id="{0df4cebf-1354-4f54-bdae-d4b312520a8b}">
+      <Declaration><![CDATA[(* Gets the length of dynamic array. *)
+METHOD Size : DINT
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[Is_Empty(); Size := THIS^.nLength;
+]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_Dynamic_Array">
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Dynamic_Array.Access">
+      <LineId Id="35" Count="0" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="10" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Dynamic_Array.Clear">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Dynamic_Array.FB_exit">
+      <LineId Id="6" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Dynamic_Array.FB_init">
+      <LineId Id="32" Count="0" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="38" Count="1" />
+      <LineId Id="31" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Dynamic_Array.Insert">
+      <LineId Id="100" Count="0" />
+      <LineId Id="66" Count="0" />
+      <LineId Id="54" Count="2" />
+      <LineId Id="84" Count="0" />
+      <LineId Id="65" Count="0" />
+      <LineId Id="52" Count="0" />
+      <LineId Id="19" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Dynamic_Array.Is_Empty">
+      <LineId Id="5" Count="1" />
+    </LineIds>
+    <LineIds Name="FB_Dynamic_Array.Resize">
+      <LineId Id="34" Count="0" />
+      <LineId Id="46" Count="0" />
+      <LineId Id="44" Count="0" />
+      <LineId Id="102" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="103" Count="0" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="69" Count="0" />
+      <LineId Id="15" Count="1" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="17" Count="1" />
+      <LineId Id="100" Count="0" />
+      <LineId Id="81" Count="0" />
+      <LineId Id="22" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Dynamic_Array.Show">
+      <LineId Id="28" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="21" Count="1" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="12" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Dynamic_Array.Size">
+      <LineId Id="5" Count="0" />
+      <LineId Id="10" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.4">
+  <DUT Name="ST_Arg_Pointer" Id="{ab23401e-be9d-44b6-b8ba-fee38788a036}">
+    <Declaration><![CDATA[(* Collection of pointers for F_ANY_ARG. *)
+TYPE INTERNAL ST_Arg_Pointer :
+STRUCT
+    pBool			: POINTER TO BOOL;
+    pByte			: POINTER TO BYTE;
+    pWord			: POINTER TO WORD;
+    pDWord			: POINTER TO DWORD;
+    pLWord			: POINTER TO LWORD;
+    pSint			: POINTER TO SINT;
+    pInt			: POINTER TO INT;
+    pDint			: POINTER TO DINT;
+    pLint			: POINTER TO LINT;
+    pUSint			: POINTER TO USINT;
+    pUInt			: POINTER TO UINT;
+    pUDint			: POINTER TO UDINT;
+    pULint			: POINTER TO ULINT;
+    pReal			: POINTER TO REAL;
+    pLReal			: POINTER TO LREAL;
+    pString			: POINTER TO STRING;
+    pWString		: POINTER TO WSTRING;
+    pTime			: POINTER TO TIME;
+    pDate			: POINTER TO DATE;
+    pDate_And_Time	: POINTER TO DATE_AND_TIME;
+    pTime_Of_Day	: POINTER TO TIME_OF_DAY;
+    pPointer		: PVOID;
+	pLTime 			: POINTER TO LTIME;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

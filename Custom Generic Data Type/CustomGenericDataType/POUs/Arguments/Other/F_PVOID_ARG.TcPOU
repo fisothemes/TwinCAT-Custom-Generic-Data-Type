@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.4">
+  <POU Name="F_PVOID_ARG" Id="{702af97a-af11-41ab-adb0-d2e943093741}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION F_PVOID_ARG : ST_Arg
+VAR_INPUT
+	pInput : PVOID;
+END_VAR
+VAR
+	stArg : ST_Arg;
+	sysVar_Info : __SYSTEM.VAR_INFO;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[sysVar_Info 	:= __VARINFO(pInput);
+stArg.TypeClass := sysVar_Info.TypeClass;
+stArg.pValue 	:= pInput;
+stArg.diSize 	:= SIZEOF(pInput);
+stArg.sValue 	:= TO_STRING(pInput); 
+F_PVOID_ARG := stArg;
+]]></ST>
+    </Implementation>
+    <LineIds Name="F_PVOID_ARG">
+      <LineId Id="136" Count="5" />
+      <LineId Id="55" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

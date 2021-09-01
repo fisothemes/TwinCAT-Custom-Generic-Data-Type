@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.4">
+  <POU Name="F_STRING_ARG" Id="{3ed4ad1e-0b75-43dc-9223-1e97e2d78650}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION F_STRING_ARG : ST_Arg
+VAR_INPUT
+	sInput : T_MaxString;
+END_VAR
+VAR
+	stArg : ST_Arg;
+	sysVar_Info : __SYSTEM.VAR_INFO;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[sysVar_Info 	:= __VARINFO(sInput);
+stArg.TypeClass := sysVar_Info.TypeClass;
+stArg.pValue 	:= 0;
+stArg.diSize 	:= SIZEOF(sInput);
+stArg.sValue 	:= sInput; 
+F_STRING_ARG := stArg;
+]]></ST>
+    </Implementation>
+    <LineIds Name="F_STRING_ARG">
+      <LineId Id="129" Count="5" />
+      <LineId Id="55" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.4">
+  <POU Name="F_UINT_ARG" Id="{c0eb7f02-0951-4f4c-a6b3-b6daa2a8be9f}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION F_UINT_ARG : ST_Arg
+VAR_INPUT
+	nInput : UINT;
+END_VAR
+VAR
+	stArg : ST_Arg;
+	sysVar_Info : __SYSTEM.VAR_INFO;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[sysVar_Info 	:= __VARINFO(nInput);
+stArg.TypeClass := sysVar_Info.TypeClass;
+stArg.pValue 	:= 0;
+stArg.diSize 	:= SIZEOF(nInput);
+stArg.sValue 	:= TO_STRING(nInput); 
+F_UINT_ARG := stArg;]]></ST>
+    </Implementation>
+    <LineIds Name="F_UINT_ARG">
+      <LineId Id="89" Count="4" />
+      <LineId Id="55" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

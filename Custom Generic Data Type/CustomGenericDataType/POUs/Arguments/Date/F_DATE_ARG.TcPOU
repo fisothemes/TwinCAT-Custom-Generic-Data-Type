@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.4">
+  <POU Name="F_DATE_ARG" Id="{f2fd42c1-eb01-4232-9373-15640b42c4ff}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION F_DATE_ARG : ST_Arg
+VAR_INPUT
+	dtInput : DATE;
+END_VAR
+VAR
+	stArg : ST_Arg;
+	sysVar_Info : __SYSTEM.VAR_INFO;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[sysVar_Info 	:= __VARINFO(dtInput);
+stArg.TypeClass := sysVar_Info.TypeClass;
+stArg.pValue 	:= 0;
+stArg.diSize 	:= SIZEOF(dtInput);
+stArg.sValue 	:= TO_STRING(dtInput); 
+F_DATE_ARG := stArg;
+]]></ST>
+    </Implementation>
+    <LineIds Name="F_DATE_ARG">
+      <LineId Id="176" Count="5" />
+      <LineId Id="55" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

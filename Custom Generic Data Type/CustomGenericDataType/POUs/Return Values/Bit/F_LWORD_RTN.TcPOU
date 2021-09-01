@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.4">
+  <POU Name="F_LWORD_RTN" Id="{20e52331-c065-44b9-a32d-5b8f1ab52d3e}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION F_LWORD_RTN : LWORD
+VAR_INPUT
+	stArg : ST_Arg;
+END_VAR
+VAR
+	sysVar_Info : __SYSTEM.VAR_INFO;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[sysVar_Info := __VARINFO(F_LWORD_RTN);
+IF stArg.TypeClass = sysVar_Info.TypeClass THEN 
+	F_LWORD_RTN := TO_LWORD(stArg.sValue);
+	END_IF]]></ST>
+    </Implementation>
+    <LineIds Name="F_LWORD_RTN">
+      <LineId Id="220" Count="2" />
+      <LineId Id="206" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

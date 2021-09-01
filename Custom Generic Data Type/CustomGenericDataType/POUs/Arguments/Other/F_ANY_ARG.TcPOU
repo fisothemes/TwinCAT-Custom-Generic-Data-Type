@@ -1,0 +1,121 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.4">
+  <POU Name="F_ANY_ARG" Id="{58f3128e-7257-401b-a4ae-899a0ff925ea}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION F_ANY_ARG : ST_Arg
+VAR_INPUT
+	Input : ANY;
+END_VAR
+VAR
+	stArg 			: ST_Arg;
+	stArg_Pointer 	: ST_Arg_Pointer;
+	sysVar_Info 	: __SYSTEM.VAR_INFO;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[stArg.TypeClass := Input.TypeClass;
+stArg.pValue 	:= Input.pValue;
+stArg.diSize 	:= Input.diSize;
+
+CASE Input.TypeClass OF 
+	__SYSTEM.TYPE_CLASS.TYPE_BOOL:
+		stArg_Pointer.pBool := Input.pValue;
+		stArg.sValue := TO_STRING(stArg_Pointer.pBool^);
+		
+    __SYSTEM.TYPE_CLASS.TYPE_BYTE:
+		stArg_Pointer.pByte := Input.pValue;
+		stArg.sValue := TO_STRING(stArg_Pointer.pByte^);
+		
+    __SYSTEM.TYPE_CLASS.TYPE_WORD:
+		stArg_Pointer.pWord := Input.pValue;
+		stArg.sValue := TO_STRING(stArg_Pointer.pWord^);
+		
+    __SYSTEM.TYPE_CLASS.TYPE_DWORD:
+		stArg_Pointer.pDWord := Input.pValue;
+		stArg.sValue := TO_STRING(stArg_Pointer.pDWord^);
+		
+    __SYSTEM.TYPE_CLASS.TYPE_LWORD:
+		stArg_Pointer.pLWord := Input.pValue;
+		stArg.sValue := TO_STRING(stArg_Pointer.pLWord^);
+		
+    __SYSTEM.TYPE_CLASS.TYPE_SINT:
+		stArg_Pointer.pSint := Input.pValue;
+		stArg.sValue := TO_STRING(stArg_Pointer.pSint^);
+		
+    __SYSTEM.TYPE_CLASS.TYPE_INT:
+		stArg_Pointer.pInt := Input.pValue;
+		stArg.sValue := TO_STRING(stArg_Pointer.pInt^);
+		
+    __SYSTEM.TYPE_CLASS.TYPE_DINT:
+		stArg_Pointer.pDint := Input.pValue;
+		stArg.sValue := TO_STRING(stArg_Pointer.pDint^);
+		
+    __SYSTEM.TYPE_CLASS.TYPE_LINT:
+		stArg_Pointer.pLint := Input.pValue;
+		stArg.sValue := TO_STRING(stArg_Pointer.pLint^);
+		
+    __SYSTEM.TYPE_CLASS.TYPE_USINT:
+		stArg_Pointer.pUSint := Input.pValue;
+		stArg.sValue := TO_STRING(stArg_Pointer.pUSint^);
+		
+    __SYSTEM.TYPE_CLASS.TYPE_UINT:
+		stArg_Pointer.pUInt := Input.pValue;
+		stArg.sValue := TO_STRING(stArg_Pointer.pUInt^);
+		
+    __SYSTEM.TYPE_CLASS.TYPE_UDINT:
+		stArg_Pointer.pUDint := Input.pValue;
+		stArg.sValue := TO_STRING(stArg_Pointer.pUDint^);
+		
+    __SYSTEM.TYPE_CLASS.TYPE_ULINT:
+		stArg_Pointer.pULint := Input.pValue;
+		stArg.sValue := TO_STRING(stArg_Pointer.pULint^);
+		
+   __SYSTEM.TYPE_CLASS.TYPE_REAL:
+		stArg_Pointer.pReal := Input.pValue;
+		stArg.sValue := TO_STRING(stArg_Pointer.pReal^);
+		
+    __SYSTEM.TYPE_CLASS.TYPE_LREAL:
+		stArg_Pointer.pLReal := Input.pValue;
+		stArg.sValue := TO_STRING(stArg_Pointer.pLReal^);
+		
+    __SYSTEM.TYPE_CLASS.TYPE_STRING:
+		stArg_Pointer.pString := Input.pValue;
+		stArg.sValue := TO_STRING(stArg_Pointer.pString^);
+		
+   __SYSTEM.TYPE_CLASS.TYPE_WSTRING:
+		stArg_Pointer.pWString := Input.pValue;
+		stArg.sValue := TO_STRING(stArg_Pointer.pWString^);
+		
+    __SYSTEM.TYPE_CLASS.TYPE_TIME:
+		stArg_Pointer.pTime := Input.pValue;
+		stArg.sValue := TO_STRING(stArg_Pointer.pTime^);
+		
+    __SYSTEM.TYPE_CLASS.TYPE_DATE:
+		stArg_Pointer.pDate := Input.pValue;
+		stArg.sValue := TO_STRING(stArg_Pointer.pDate^);
+		
+    __SYSTEM.TYPE_CLASS.TYPE_DATEANDTIME:
+		stArg_Pointer.pDate_And_Time := Input.pValue;
+		stArg.sValue := TO_STRING(stArg_Pointer.pDate_And_Time^);
+		
+    __SYSTEM.TYPE_CLASS.TYPE_TIMEOFDAY:
+		stArg_Pointer.pTime_Of_Day := Input.pValue;
+		stArg.sValue := TO_STRING(stArg_Pointer.pTime_Of_Day^);
+	
+	__SYSTEM.TYPE_CLASS.TYPE_POINTER:
+		stArg.sValue := TO_STRING(Input.pValue);
+		
+	__SYSTEM.TYPE_CLASS.TYPE_LTIME:
+		stArg_Pointer.pLTime := Input.pValue;
+		stArg.sValue := TO_STRING(stArg_Pointer.pLTime^);
+ELSE
+	stArg.sValue := 'NULL'; 
+END_CASE
+
+F_ANY_ARG := stArg;]]></ST>
+    </Implementation>
+    <LineIds Name="F_ANY_ARG">
+      <LineId Id="218" Count="98" />
+      <LineId Id="198" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
